@@ -26,7 +26,7 @@ def confirm(default=False):
             return default
 
 
-def main(logfh):
+def loop(logfh):
     starttime = None
     while True:
         while starttime is None:
@@ -58,15 +58,16 @@ def main(logfh):
         logfh.flush()
 
 
-signal.signal(signal.SIGINT, signal_handler)
+def main():
+    signal.signal(signal.SIGINT, signal_handler)
 
-A = ap.ArgumentParser()
-A.add_argument("-o", "--output", required=True, help="Output filename")
-args = A.parse_args()
+    A = ap.ArgumentParser()
+    A.add_argument("-o", "--output", required=True, help="Output filename")
+    args = A.parse_args()
 
-if op.exists(args.output):
-    print("Error -- Output file exists. Use a different filename")
-    sys.exit(1)
+    if op.exists(args.output):
+        print("Error -- Output file exists. Use a different filename")
+        sys.exit(1)
 
-with open(args.output, "w") as fh:
-    main(fh)
+    with open(args.output, "w") as fh:
+        loop(fh)
